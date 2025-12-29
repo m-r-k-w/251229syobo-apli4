@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Typer | Premium Typing Experience</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Outfit:wght@300;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Background Decoration -->
+        <div class="bg-glow"></div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen">
+            <h1 class="glitch" data-text="VOICE TYPER">VOICE TYPER</h1>
+            <p class="subtitle">Experience the sound of your speed</p>
+
+            <div class="settings-container">
+                <div class="setting-group">
+                    <label>TIME LIMIT</label>
+                    <div class="toggle-group" id="time-options">
+                        <button class="toggle-btn active" data-value="15">15s</button>
+                        <button class="toggle-btn" data-value="30">30s</button>
+                        <button class="toggle-btn" data-value="60">1m</button>
+                        <button class="toggle-btn" data-value="180">3m</button>
+                        <button class="toggle-btn" data-value="0">∞</button>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label>DIFFICULTY</label>
+                    <div class="toggle-group" id="difficulty-options">
+                        <button class="toggle-btn" data-value="easy">EASY</button>
+                        <button class="toggle-btn active" data-value="normal">NORMAL</button>
+                        <button class="toggle-btn" data-value="hard">HARD</button>
+                        <button class="toggle-btn" data-value="expert">EXPERT</button>
+                    </div>
+                </div>
+            </div>
+
+            <button id="start-btn" class="main-btn">INITIALIZE CORE</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen hidden">
+            <div class="game-header">
+                <div class="stat">
+                    <span class="label">TIME</span>
+                    <span id="timer" class="value">15.0</span>
+                </div>
+                <div class="stat">
+                    <span class="label">SCORE</span>
+                    <span id="score" class="value">000</span>
+                </div>
+            </div>
+
+            <div class="typing-area">
+                <div id="word-display" class="word-card">
+                    <div id="target-word" class="word">READY</div>
+                    <div class="word-progress-bar">
+                        <div id="letter-timer-bar"></div>
+                    </div>
+                </div>
+                <div class="input-guide">Press keys to type...</div>
+            </div>
+
+            <div class="keyboard-visualizer" id="keyboard-viz">
+                <!-- Mini visualizer for pressed keys -->
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="screen hidden">
+            <h2 class="result-title">MISSION COMPLETE</h2>
+            <div class="final-stats">
+                <div class="stat-large">
+                    <span class="label">FINAL SCORE</span>
+                    <span id="final-score" class="value">0</span>
+                </div>
+                <div class="stat-grid">
+                    <div class="stat-mini">
+                        <span class="label">WPM</span>
+                        <span id="wpm" class="value">0</span>
+                    </div>
+                    <div class="stat-mini">
+                        <span class="label">ACCURACY</span>
+                        <span id="accuracy" class="value">0%</span>
+                    </div>
+                </div>
+            </div>
+            <button id="restart-btn" class="main-btn secondary">RESTART MISSION</button>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

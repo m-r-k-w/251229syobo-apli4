@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Voice Demo</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #1a1a2e; color: white; }
+        .box { border: 2px solid #0f3460; padding: 2rem; border-radius: 10px; text-align: center; }
+        button { padding: 10px 20px; font-size: 1.2rem; cursor: pointer; background: #e94560; color: white; border: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>音声読み上げデモ</h1>
+        <p>「開始」を押してから、キーボードを叩いてみてください。</p>
+        <button id="startBtn">音声機能を有効化して開始</button>
+        <h2 id="keyDisplay">-</h2>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const keyDisplay = document.getElementById('keyDisplay');
+        let enabled = false;
+
+        startBtn.onclick = () => {
+            enabled = true;
+            const uttr = new SpeechSynthesisUtterance("準備完了です。さあ、打ってみてください。");
+            uttr.lang = 'ja-JP';
+            speechSynthesis.speak(uttr);
+            startBtn.disabled = true;
+            startBtn.innerText = "キーを押してください";
+        };
+
+        window.onkeydown = (e) => {
+            if (!enabled) return;
+            
+            keyDisplay.innerText = e.key;
+
+            // 音声合成の本体
+            const uttr = new SpeechSynthesisUtterance(e.key);
+            uttr.lang = 'en-US'; // アルファベットなら英語設定が綺麗です
+            uttr.rate = 1.5;     // 少し速めに
+            
+            // 再生中の音をキャンセルして最新の音を出す（連打対応）
+            speechSynthesis.cancel();
+            speechSynthesis.speak(uttr);
+        };
+    </script>
+</body>
+</html>

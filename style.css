@@ -1,0 +1,332 @@
+:root {
+    --bg-dark: #050510;
+    --accent-blue: #00f2ff;
+    --accent-pink: #ff007b;
+    --accent-purple: #9d00ff;
+    --text-primary: #ffffff;
+    --text-secondary: #aaaabb;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#app {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    height: 600px;
+    z-index: 1;
+}
+
+.bg-glow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(157, 0, 255, 0.15) 0%, rgba(0, 242, 255, 0.05) 50%, transparent 70%);
+    filter: blur(80px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.hidden {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Typography & Effects */
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 5rem;
+    letter-spacing: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    text-shadow: 0 0 10px var(--accent-blue), 0 0 20px var(--accent-blue);
+    position: relative;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 4rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+}
+
+/* Form Elements */
+.settings-container {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+label {
+    display: block;
+    font-size: 0.8rem;
+    letter-spacing: 0.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.8rem;
+}
+
+.toggle-group {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--glass-bg);
+    padding: 0.4rem;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 0.8rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.toggle-btn.active {
+    background: var(--text-primary);
+    color: var(--bg-dark);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.main-btn {
+    padding: 1.2rem 4rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 0.2rem;
+    background: transparent;
+    border: 2px solid var(--accent-blue);
+    color: var(--accent-blue);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.main-btn:hover {
+    background: var(--accent-blue);
+    color: var(--bg-dark);
+    box-shadow: 0 0 30px var(--accent-blue);
+}
+
+.main-btn.secondary {
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+}
+
+.main-btn.secondary:hover {
+    background: var(--accent-pink);
+    color: var(--bg-dark);
+    box-shadow: 0 0 30px var(--accent-pink);
+}
+
+/* Game Area */
+.game-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat .label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1rem;
+}
+
+.stat .value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    color: var(--accent-blue);
+    min-width: 150px;
+}
+
+.typing-area {
+    text-align: center;
+}
+
+.word-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 3rem 5rem;
+    border-radius: 24px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    min-width: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+.word-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+#letter-timer-bar {
+    width: 100%;
+    height: 100%;
+    background: var(--accent-pink);
+    transition: width linear;
+}
+
+.word {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    letter-spacing: 0.3rem;
+    text-transform: uppercase;
+}
+
+.word .correct {
+    color: var(--accent-blue);
+    text-shadow: 0 0 10px var(--accent-blue);
+}
+
+.word .wrong {
+    color: var(--accent-pink);
+    text-shadow: 0 0 10px var(--accent-pink);
+    animation: shake 0.2s;
+}
+
+.input-guide {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    letter-spacing: 0.1rem;
+    opacity: 0.6;
+}
+
+/* Result Screen */
+.result-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    color: var(--accent-purple);
+    margin-bottom: 3rem;
+}
+
+.final-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    margin-bottom: 4rem;
+}
+
+.stat-large .value {
+    display: block;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 6rem;
+    text-align: center;
+}
+
+.stat-grid {
+    display: flex;
+    gap: 4rem;
+}
+
+.stat-mini .value {
+    font-size: 2rem;
+    color: var(--accent-blue);
+}
+
+/* Animations */
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(5px);
+    }
+
+    50% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+
+    20% {
+        transform: translate(-2px, 2px);
+    }
+
+    40% {
+        transform: translate(-2px, -2px);
+    }
+
+    60% {
+        transform: translate(2px, 2px);
+    }
+
+    80% {
+        transform: translate(2px, -2px);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
