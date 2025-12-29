@@ -231,6 +231,26 @@ label {
     text-transform: uppercase;
 }
 
+.ready-text {
+    font-size: 2.5rem;
+    color: var(--text-secondary);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
+}
+
 .word .correct {
     color: var(--accent-blue);
     text-shadow: 0 0 10px var(--accent-blue);

@@ -7,10 +7,10 @@ class VoiceTyper {
         this.timeLeft = 15;
         this.stat = {
             correct: 0,
+            incorrect: 0,
             total: 0
         };
-        this.currentLetter = "";
-        this.gameActive = false;
+        this.gameState = 'start'; // 'start', 'ready', 'playing', 'result'
         this.timerInterval = null;
         this.letterTimerTimeout = null;
 
@@ -52,11 +52,20 @@ class VoiceTyper {
         });
 
         // Start button
-        document.getElementById('start-btn').onclick = () => this.startGame();
+        document.getElementById('start-btn').onclick = () => this.prepareGame();
         document.getElementById('restart-btn').onclick = () => this.showScreen('start');
 
-        // Typing input
-        window.onkeydown = (e) => this.handleTyping(e);
+        // Global input handler
+        window.onkeydown = (e) => this.inputHandler(e);
+    }
+
+    inputHandler(e) {
+        if (this.gameState === 'ready' && e.code === 'Space') {
+            e.preventDefault();
+            this.startGame();
+        } else if (this.gameState === 'playing') {
+            this.handleTyping(e);
+        }
     }
 
     initAudio() {
@@ -97,20 +106,29 @@ class VoiceTyper {
         this.screens[screenName].classList.remove('hidden');
     }
 
-    startGame() {
+    prepareGame() {
         this.initAudio();
-        this.stat = { correct: 0, total: 0 };
-        this.timeLeft = this.timeLimit;
-        this.gameActive = true;
+        this.gameState = 'ready';
         this.showScreen('game');
+
+        const wordEl = document.getElementById('target-word');
+        wordEl.innerHTML = `<span class="ready-text">PRESS SPACE</span>`;
+        document.getElementById('timer').innerText = this.timeLimit > 0 ? this.timeLimit.toFixed(1) : "∞";
+        document.getElementById('score').innerText = "0 / 0";
+
+        this.speak("Prepare for mission. Press space to begin.", 'en-US');
+    }
+
+    startGame() {
+        this.stat = { correct: 0, incorrect: 0, total: 0 };
+        this.timeLeft = this.timeLimit;
+        this.gameState = 'playing';
 
         this.updateStats();
         this.nextLetter();
 
         if (this.timeLimit > 0) {
             this.startTimer();
-        } else {
-            document.getElementById('timer').innerText = "∞";
         }
 
         this.speak("Mission Started", 'en-US');
@@ -133,10 +151,9 @@ class VoiceTyper {
     }
 
     nextLetter() {
-        if (!this.gameActive) return;
+        if (this.gameState !== 'playing') return;
 
         this.currentLetter = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
-        this.stat.total++;
         this.renderLetter();
         this.resetLetterTimer();
         this.updateStats();
@@ -157,8 +174,11 @@ class VoiceTyper {
 
         clearTimeout(this.letterTimerTimeout);
         this.letterTimerTimeout = setTimeout(() => {
-            if (this.gameActive) {
-                this.playSound('wrong'); // Timeout is wrong
+            if (this.gameState === 'playing') {
+                this.stat.total++;
+                this.stat.incorrect++;
+                this.playSound('wrong');
+                this.updateStats();
                 this.nextLetter();
             }
         }, limit * 1000);
@@ -171,7 +191,7 @@ class VoiceTyper {
     }
 
     handleTyping(e) {
-        if (!this.gameActive) return;
+        if (this.gameState !== 'playing') return;
         if (e.key === 'Escape') this.endGame();
         if (e.key.length !== 1) return;
 
@@ -181,12 +201,26 @@ class VoiceTyper {
         if (char === this.currentLetter) {
             this.playSound('correct');
             this.stat.correct++;
+            this.stat.total++;
+            this.updateStats();
             this.nextLetter();
         } else {
             this.playSound('wrong');
+            // Incorrect press counts as a total attempt immediately only if we want, 
+            // but usually in these games you can keep trying until timeout or next.
+            // Based on user: "いくつ正解したかを正解点数にしてください"
+            // Let's count wrong press as an immediate fail to move to next letter?
+            // "出題数分の正解数が分かる" とのことなので、1ミス=1出題終了とするのが分かりやすい
+            this.stat.total++;
+            this.stat.incorrect++;
+            this.updateStats();
+
             const wordEl = document.getElementById('target-word');
             wordEl.classList.add('wrong');
-            setTimeout(() => wordEl.classList.remove('wrong'), 200);
+            setTimeout(() => {
+                wordEl.classList.remove('wrong');
+                this.nextLetter();
+            }, 200);
         }
     }
 
@@ -203,7 +237,7 @@ class VoiceTyper {
     }
 
     endGame() {
-        this.gameActive = false;
+        this.gameState = 'result';
         clearInterval(this.timerInterval);
         clearTimeout(this.letterTimerTimeout);
 
